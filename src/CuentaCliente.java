@@ -9,8 +9,9 @@ public abstract class CuentaCliente extends Cuenta {
 		super(cbuIngresado, nominacionIngresada);
 		super.saldo = saldoInicial;
 		this.activo = true;
-		
-		
+		for (int i=0; i<titularesIniciales.size(); i++){
+			titulares.add(titularesIniciales.get(i));
+		}
 	}
 
 
