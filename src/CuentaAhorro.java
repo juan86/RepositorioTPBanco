@@ -11,15 +11,14 @@ public class CuentaAhorro extends CuentaCliente {
 		
 	}
 
-	@Override
+
 	public void acreditar(double montoAAcreditar) {
-		// TODO Auto-generated method stub
+		super.saldo = super.saldo + montoAAcreditar;
 
 	}
 
-	@Override
 	public void debitar(double montoADebitar) {
-		// TODO Auto-generated method stub
+		super.saldo = super.saldo - montoADebitar;
 
 	}
 
