@@ -1,0 +1,40 @@
+
+class Recursividad {
+	
+	
+
+		public int sumaDeLosPrimerosNumeros(int n){    // ejercicio 2
+			
+			
+			if(n==0){
+				return 1;
+			}
+			
+			else{
+				return sumaDeLosPrimerosNumeros(n-1)+n;
+			}
+		}
+		
+		
+		
+		public int factorialDeUnNumero(int n){
+			if(n==0){
+				return 1;
+			}
+			
+			else{
+				return factorialDeUnNumero(n-1)*n;
+			}
+		}
+			
+	
+
+
+}
+
+
+
+
+
+
+
