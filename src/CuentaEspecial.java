@@ -3,7 +3,7 @@ public class CuentaEspecial extends Cuenta {
 	
 	public CuentaEspecial(String cbuIngresado, Moneda nominacionIngresada, double saldoInicial){
 		super(cbuIngresado, nominacionIngresada);
-		super.saldo = 0;
+		super.setSaldo(0.0);
 	}
 	
 	public void acreditar(double montoAAcreditar) {

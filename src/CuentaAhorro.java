@@ -13,12 +13,12 @@ public class CuentaAhorro extends CuentaCliente {
 
 
 	public void acreditar(double montoAAcreditar) {
-		super.saldo = super.saldo + montoAAcreditar;
+		super.setSaldo(super.getSaldo() + montoAAcreditar);
 
 	}
 
 	public void debitar(double montoADebitar) {
-		super.saldo = super.saldo - montoADebitar;
+		super.setSaldo(super.getSaldo() - montoADebitar);
 
 	}
 
