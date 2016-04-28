@@ -1,7 +1,10 @@
 public class CuentaEspecial extends Cuenta {
 
-	
-	public CuentaEspecial(String cbuIngresado, Moneda nominacionIngresada, double saldoInicial){
+	/* Constructor para Cuenta Especial
+	 * Pre-condicion: ingresar el cbu y la moneda de la cuenta especial
+	 * Post-Conficion: Crear una cuenta con los parametros ingresados y el saldo inicial en 0
+	 */
+	public CuentaEspecial(String cbuIngresado, Moneda nominacionIngresada){
 		super(cbuIngresado, nominacionIngresada);
 		super.setSaldo(0.0);
 	}
