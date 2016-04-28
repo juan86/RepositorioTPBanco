@@ -19,19 +19,17 @@ public class CuentaAhorro extends CuentaCliente {
 		}
 	}
 
-
-	public void acreditar(double montoAAcreditar) {
-		super.setSaldo(super.getSaldo() + montoAAcreditar);
-	}
-
-	public void debitar(double montoADebitar) {
-		super.setSaldo(super.getSaldo() - montoADebitar);
-	}
-
 	public double getCostoMantenimiento(){
 		return this.costoActualMantenimiento;
 	}
 	
+	public static double getCostoMantenimientoPesos(){
+		return costoMantenimientoPesos;
+	}
+	
+	public static double getCostoMantenimientoDolares(){
+		return costoMantenimientoDolares;
+	}
 	
 	public static void setCostoMantenimientoPesos(double nuevoCosto){
 		costoMantenimientoPesos = nuevoCosto;
