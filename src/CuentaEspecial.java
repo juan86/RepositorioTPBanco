@@ -6,15 +6,5 @@ public class CuentaEspecial extends Cuenta {
 		super.setSaldo(0.0);
 	}
 	
-	public void acreditar(double montoAAcreditar) {
-		super.saldo = super.saldo + montoAAcreditar;
-		return;
-	}
-
-	
-	public void debitar(double montoADebitar) {
-		super.saldo = super.saldo - montoADebitar;
-		return;
-	}
 
 }

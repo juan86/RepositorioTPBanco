@@ -13,12 +13,13 @@ public class GestionDeCuentas {
 	 */
 	//Post-Condicion: Devuelve un objeto cuenta ahorro inicializado con un CBU correspondiente al CUIT + numero aleatorio entre 0 y 9999
 	
-	public CuentaAhorro aperturaDeCuenta(ArrayList<Cliente> titulares, double montoInicial, Moneda nominacionDeCuenta, double tasaDeInteres){
+	public void aperturaDeCuenta(ArrayList<Cliente> titulares, double montoInicial, Moneda nominacionDeCuenta, double tasaDeInteres){
 		Random rndm = new Random();
 		Cliente primerCliente = titulares.get(1);
-		String cbuGenerado = primerCliente.getcuit + (int)(rndm.nextDouble()*10000);
+		String cbuGenerado = primerCliente.getCuit + (int)(rndm.nextDouble()*10000);
 		CuentaAhorro cuentaACrear = new CuentaAhorro(montoInicial, cbuGenerado, nominacionDeCuenta, titulares, tasaDeInteres);
-		return cuentaACrear;
+		bancoGestionado.agregarCuenta(cuentaACrear);
+		return;
 	}
 	
 	
@@ -28,11 +29,23 @@ public class GestionDeCuentas {
 	//Post-Condicion: Devuelve un objeto cuenta corriente inicializado con un CBU correspondiente al CUIT + numero aleatorio entre 0 y 9999
 	
 	
-	public CuentaCorriente aperturaDeCuenta(ArrayList<Cliente> titulares, double montoInicial, double sobregiro){
+	public void aperturaDeCuenta(ArrayList<Cliente> titulares, double montoInicial, double sobregiro){
 		Random rndm = new Random();
 		Cliente primerCliente = titulares.get(1);
-		String cbuGenerado = primerCliente.getcuit + (int)(rndm.nextDouble()*10000);
+		String cbuGenerado = primerCliente.getCuit + (int)(rndm.nextDouble()*10000);
 		CuentaCorriente cuentaACrear = new CuentaCorriente(montoInicial, cbuGenerado, titulares, sobregiro);
-		return cuentaACrear;
+		bancoGestionado.agregarCuenta(cuentaACrear);
+		return;
+		}
+	
+	
+	public void inhabilitarCuenta(Cuenta cuentaAInhabilitar){
+		cuentaAInhabilitar.setActiva(false);
+		return;		
+	}
+	
+	public void habilitarCuenta(Cuenta cuentaAHabilitar){
+		cuentaAHabilitar.setActiva(true);
+		return;
 	}
 }

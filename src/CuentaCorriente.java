@@ -11,11 +11,4 @@ public class CuentaCorriente extends CuentaCliente {
 		this.sobregiro = sobregiroIngresado;
 	}
 	
-	public void acreditar(double montoAAcreditar){
-		
-	}
-	
-	public void debitar(double montoADebitar){
-		
-	}
 }

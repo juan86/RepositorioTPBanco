@@ -22,9 +22,4 @@ public abstract class CuentaCliente extends Cuenta {
 			titulares.add(titularesIniciales.get(i));
 		}
 	}
-
-
-	public abstract void acreditar(double montoAAcreditar);
-
-	public abstract void debitar(double montoADebitar);
 }

@@ -6,7 +6,7 @@ public abstract class Cuenta {
 	private boolean activo;
 	private Moneda nominacion;
 	private double saldo;
-	private ArrayList<Transacciones> historicoMov;
+	private ArrayList<Transaccion> historicoMov;
 	
 	
 	//Constructor para las cuentas de ahorro y especiales con la nominacion indicada
@@ -24,11 +24,24 @@ public abstract class Cuenta {
 		this.activo = true;
 	}
 	
-	public abstract void acreditar (double montoAAcreditar);
-	
-	public abstract void debitar (double montoADebitar);
 	
 	
+	public void acreditar(double montoAAcreditar) {
+		this.setSaldo(this.getSaldo() + montoAAcreditar);
+	}
+
+	public void debitar(double montoADebitar) {
+		this.setSaldo(this.getSaldo() - montoADebitar);
+	}
+	
+	
+	public void agregarTransaccion(Transaccion nuevaTr){
+		this.historicoMov.add(nuevaTr);
+	}
+	
+	public Transaccion obtenerTransaccion(int cantidad){
+		return (this.historicoMov.get(cantidad));
+	}
 	
 	
 	//----------------------Declaracion de getters y setters---------------------------
@@ -64,5 +77,6 @@ public abstract class Cuenta {
 		this.activo = nuevoEstado;
 		return;
 	}
+
 }
 
