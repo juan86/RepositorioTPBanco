@@ -38,11 +38,18 @@ public class GestionDeCuentas {
 		return;
 		}
 	
+	/* Pre-Condicion: ingresar una cuenta que este activada.
+	*  Post-condicion: cambiar el estado de la cuenta a inactiva.
+	*/
 	
 	public void inhabilitarCuenta(Cuenta cuentaAInhabilitar){
 		cuentaAInhabilitar.setActiva(false);
 		return;		
 	}
+	
+	/* Pre-Condicion: ingresar una cuenta que este desactivada.
+	*  Post-condicion: cambiar el estado de la cuenta a activa.
+	*/
 	
 	public void habilitarCuenta(Cuenta cuentaAHabilitar){
 		cuentaAHabilitar.setActiva(true);
