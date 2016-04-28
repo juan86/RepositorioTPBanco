@@ -25,6 +25,7 @@ public abstract class Cuenta {
 	}
 	
 	
+	//Metodos heredados por todas las subclases
 	
 	public void acreditar(double montoAAcreditar) {
 		this.setSaldo(this.getSaldo() + montoAAcreditar);
