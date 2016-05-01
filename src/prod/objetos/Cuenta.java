@@ -1,12 +1,15 @@
+package prod.objetos;
 import java.util.ArrayList;
+
+import prod.excepciones.ExcepcionCuenta;
 
 public abstract class Cuenta {
 
 	private final String cbu;
 	private boolean activo;
-	private Moneda nominacion;
+	private final Moneda nominacion;
 	private double saldo;
-	private ArrayList<Transaccion> historicoMov;
+	protected ArrayList<Transaccion> historicoMov;
 	
 	
 	//Constructor para las cuentas de ahorro y especiales con la nominacion indicada
@@ -19,21 +22,18 @@ public abstract class Cuenta {
 	
 	
 	//Constructor para las cuentas corriente las cuales no especifican nominacion ( por default es pesos)
-	public Cuenta(String cbuIngresado){
+	public Cuenta (String cbuIngresado){
 		this.cbu = cbuIngresado;
 		this.activo = true;
+		this.nominacion = Moneda.pesos;
 	}
 	
 	
 	//Metodos heredados por todas las subclases
 	
-	public void acreditar(double montoAAcreditar) {
-		this.setSaldo(this.getSaldo() + montoAAcreditar);
-	}
+	public abstract void acreditar(double montoAAcreditar, Moneda tipoMoneda) throws ExcepcionCuenta;
 
-	public void debitar(double montoADebitar) {
-		this.setSaldo(this.getSaldo() - montoADebitar);
-	}
+	public abstract void debitar(double montoADebitar, Moneda tipoMonedaS) throws ExcepcionCuenta;
 	
 	
 	public void agregarTransaccion(Transaccion nuevaTr){
@@ -55,24 +55,23 @@ public abstract class Cuenta {
 		return this.nominacion;
 	}
 	
-	public void setMoneda(Moneda nuevaNominacion){
-		this.nominacion = nuevaNominacion;
-		return;
-	}
-	
 	public double getSaldo(){
 		return this.saldo;
 	}
+		
+	public boolean getEstado(){
+		return this.activo;
+	}
+	
+	public ArrayList<Transaccion> getHistoricoMov(){
+		return this.historicoMov;
+	}
+	
 	
 	public void setSaldo(double nuevoSaldo){
 		this.saldo = nuevoSaldo;
 		return;
 	}
-	
-	public boolean getActiva(){
-		return this.activo;
-	}
-	
 	
 	public void setActiva(boolean nuevoEstado){
 		this.activo = nuevoEstado;
@@ -80,4 +79,3 @@ public abstract class Cuenta {
 	}
 
 }
-
