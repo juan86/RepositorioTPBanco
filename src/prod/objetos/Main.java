@@ -2,14 +2,23 @@ package prod.objetos;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import prod.excepciones.ExcepcionBatch;
+import prod.excepciones.ExcepcionCPCliente;
+import prod.excepciones.ExcepcionCuitCliente;
+import prod.excepciones.ExcepcionDniCliente;
+import prod.excepciones.ExcepcionFechaCliente;
+import prod.excepciones.ExcepcionIOBatch;
+import prod.excepciones.ExcepcionTelefonoCliente;
+import prod.excepciones.ExcepcionTipDNICliente;
+
+
 public class Main {
 	static private Banco santander = new Banco();
-	BigInteger hola = new BigInteger("1");
+	//BigInteger hola = new BigInteger("1");
 	
 	public static void main(String[] agr) throws IOException{
 		comenzar();
@@ -21,7 +30,7 @@ public class Main {
 		do{
 			try{
 				System.out.println("----------BIENVENIDOS AL BANCO FAFAFA!!-----------\n\n"+
-						"1. GestiÛn de Clientes.\n"+
+						"1. GestiÔøΩn de Clientes.\n"+
 						"2. Gestion de Cuentas.\n"+
 						"3. Operaciones por Ventanilla.\n"+
 						"4. Proceso Batch.\n"+
@@ -36,13 +45,13 @@ public class Main {
 						select = menuGestionClientes();
 						break;
 					case 2:
-						select = menuGestionClientes();
+						select = menuGestionCuentas();
 						break;
 					case 3:
 						select = menuGestionClientes();
 						break;
 					case 4:
-						select = menuGestionClientes();
+						select = menuProcesoBatch();
 						break;
 					case 100:
 						break;
@@ -54,21 +63,22 @@ public class Main {
 						break;
 				}
 			}catch(NumberFormatException e){
-				System.out.println(e.getMessage()+", No se puede leer esa OpciÛn");
+				System.out.println(e.getMessage()+", No se puede leer esa OpciÔøΩn");
 			}
 			catch(Exception e){
 				System.out.println("Error desconocido");
 			}
 		}while(select !=0);
 	}
+	//******************************************************* CLIENTES *******************************************************
 	static private int menuGestionClientes(){
 		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
 		int select = -1;
 		do{
 			try{
 				System.out.println("------------GESTION DE CLIENTES--------------\n\n"+
-						"1. Alta de Cliente F˙êico.\n"+
-						"2. Alta de Cliente Jur˙Åico.\n"+
+						"1. Alta de Cliente FÔøΩsico.\n"+
+						"2. Alta de Cliente JurÔøΩdico.\n"+
 						"3. Busqueda de cliente por Cuit.\n"+
 						"4. Busqueda de cliente por DNI.\n"+
 						"5. Busqueda de cliente por Nombre.\n"+
@@ -134,9 +144,10 @@ public class Main {
 		select = 100;
 		return select;
 	}
-	static private <thrown> void altaClienteFisico() throws IOException{
-		String nombre,cuit,direccion,localidad,provincia,profesion,nombreConyuge;
-		int cp,telefono,tipDNI,estadoCivil,numeroDocumento;
+	static private  void altaClienteFisico(){
+		String nombre,cuit,direccion,localidad,provincia,profesion,nombreConyuge,cp,telefono,numeroDocumento;
+		TipDocumento tipDocumento;
+		EnumCivil estadoCivil;
 		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
 		try{
 			System.out.println("Ingrese los datos Del Cliente Fisico");
@@ -145,60 +156,83 @@ public class Main {
 			System.out.println("Cuit: (ej: '20324878379')");
 			cuit = io.readLine();
 			if(cuit.length()!=11 || !esNumero(cuit)){
-				System.err.println("Numero de Cuit mal cargado");
-				throw new  NumberFormatException();
+				throw new  ExcepcionCuitCliente(cuit);
 			}
-			System.out.println("Domicilio: (ej: Av. Eva PerÛn 4321)");
+			System.out.println("Domicilio: (ej: Av. Eva PerÔøΩn 4321)");
 			direccion = io.readLine().toUpperCase();
 			System.out.println("Codigo Postal: (ej: 1650):");
-			cp = Integer.parseInt(io.readLine());
+			cp = io.readLine();
+			if(cp.length() != 4 || !esNumero(cp)){
+				throw new  ExcepcionCPCliente(cp);
+			}
 			System.out.println("Localidad: (ej 'San Martin')");
 			localidad = io.readLine().toUpperCase();
 			System.out.println("Provincia: (ej 'Buenos Aires')");
 			provincia = io.readLine().toUpperCase();
 			System.out.println("Telefono: (ej 1555647477)");
-			telefono = Integer.parseInt(io.readLine());
-			System.out.println("Tipo de Documento: (ej '1.DNI / 2.Pasaporte')");
-			tipDNI = Integer.parseInt(io.readLine());
-			if(tipDNI == 1){				
-			}else if(tipDNI ==2){				
+			telefono = io.readLine();
+			if(!esNumero(telefono)){
+				throw new  ExcepcionTelefonoCliente(telefono);
+			}
+			System.out.println("Ingrese 1 para DNI o 2 para Pasaporte')");
+			String valor = io.readLine();
+			if(valor.length() != 1 || !esNumero(valor)){
+				throw new ExcepcionTipDNICliente();
+			}else if(valor.equals("1")){
+				tipDocumento = TipDocumento.DNI;
+			}else if(valor.equals("2")){
+				tipDocumento = TipDocumento.PASAPORTE;
 			}else{
-				System.err.println("Error tipo DNI, debe ingresar la opcion 1 o 2");
-				throw new NumberFormatException();
+				System.out.println("no funciona el equal");
+				throw new ExcepcionTipDNICliente();
 			}
 			System.out.println("Numero de Documento: (ej 32487837)");
 			String entrada = io.readLine();
 			if(entrada.length()!=8 || !esNumero(entrada)){
 				System.err.println("Documento no valido");
-				throw new NumberFormatException();
+				throw new ExcepcionDniCliente(entrada);
 			}else{
-				numeroDocumento = Integer.parseInt(entrada);
+				numeroDocumento = entrada;
 			}
-			System.out.println("Estado Civil (ej '1.SOLTERO / 2.CASADO')");
-			estadoCivil = Integer.parseInt(io.readLine());
-			if(estadoCivil == 1){				
-			}else if(estadoCivil ==2){				
+			System.out.println("Ingrese (1) para SOLTERO o  (2) CASADO)");
+			valor = io.readLine();
+			if(valor.length() != 1 || !esNumero(valor)){
+				throw new ExcepcionTipDNICliente();
+			}else if(Integer.parseInt(valor) == 1){
+				estadoCivil = EnumCivil.SOLTERO;
+			}else if(Integer.parseInt(valor) == 2){
+				estadoCivil = EnumCivil.CASADO;
 			}else{
-				System.err.println("Error Estadi Civil, debe ingresar la opcion 1 o 2");
-				throw new NumberFormatException();
+				throw new ExcepcionTipDNICliente();
 			}
 			System.out.println("Profesion: (ej 'Carpintero')");
 			profesion = io.readLine().toUpperCase();
 			System.out.println("Nombre Conyuge (ej 'Bruja')");
 			nombreConyuge=io.readLine().toUpperCase();
-			if(tipDNI == 1 && estadoCivil == 1){
-				santander.altaClienteFisico(nombre, cuit, direccion, cp, localidad, provincia, telefono, TipDocumento.DNI, numeroDocumento, EnumCivil.SOLTERO, profesion, nombreConyuge);
-			}else{
-				santander.altaClienteFisico(nombre, cuit, direccion, cp, localidad, provincia, telefono, TipDocumento.PASAPORTE, numeroDocumento, EnumCivil.CASADO, profesion, nombreConyuge);
+			if(estadoCivil == EnumCivil.SOLTERO){
+				nombreConyuge = "Estado Civil Soltero";
 			}
+			santander.altaClienteFisico(nombre, cuit, direccion, cp, localidad, provincia, telefono, tipDocumento, numeroDocumento, estadoCivil, profesion, nombreConyuge);
 			System.out.println("Se dio de alta al Cliente con el CUIT: "+cuit);
+		
+		}catch(ExcepcionCPCliente e){
+			System.out.println(e);
+		}catch(ExcepcionCuitCliente e){
+			System.out.println(e);
+		}catch(ExcepcionTelefonoCliente e){
+			System.out.println(e);
+		}catch(ExcepcionTipDNICliente e){
+			System.out.println(e);
+		}catch(ExcepcionDniCliente e){
+			System.out.println(e);
 		}catch(NumberFormatException e){
 			System.out.println("Los datos Ingresados del cliente son Incorrectos");
+		}catch(IOException e){
+			System.out.println("Error de ingreso de datos");
 		}
 	}
 	static private void altaClienteJuridico(){
-		String nombre,cuit,direccion,localidad,provincia,fechaContrato = null;
-		int cp,telefono;
+		String nombre,cuit,direccion,localidad,provincia,fechaContrato = null,cp,telefono;
 		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
 		try{
 			System.out.println("Ingrese los datos Del Cliente Fisico");
@@ -210,16 +244,16 @@ public class Main {
 				System.err.println("Numero de Cuit mal cargado");
 				throw new  NumberFormatException();
 			}
-			System.out.println("Domicilio: (ej: Av. Eva PerÛn 4321)");
+			System.out.println("Domicilio: (ej: Av. Eva PerÔøΩn 4321)");
 			direccion = io.readLine().toUpperCase();
 			System.out.println("Codigo Postal: (ej: 1650):");
-			cp = Integer.parseInt(io.readLine());
+			cp = io.readLine();
 			System.out.println("Localidad: (ej 'San Martin')");
 			localidad = io.readLine().toUpperCase();
 			System.out.println("Provincia: (ej 'Buenos Aires')");
 			provincia = io.readLine().toUpperCase();
 			System.out.println("Telefono: (ej 1555647477)");
-			telefono = Integer.parseInt(io.readLine());
+			telefono =io.readLine();
 			System.out.println("Ingrese la fecha de contrato");
 			fechaContrato = io.readLine();
 			if(!validarFecha(fechaContrato)){
@@ -232,7 +266,7 @@ public class Main {
 			System.out.println("Los datos Ingresados del cliente son Incorrectos");
 		}
 	}
-	static private void busquedaDeClientePorCuit() throws IOException{
+	static private void busquedaDeClientePorCuit(){
 		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
 		String cuit = null;
 		try{
@@ -248,10 +282,10 @@ public class Main {
 	}
 	static private void busquedaDeClientePorDni(){
 		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
-		int dni =0;
+		String dni;
 		try{
 			System.out.println("Ingrese el Numero de Cuit de un cliente Registrado:");
-			dni = Integer.parseInt(io.readLine());
+			dni = io.readLine();
 			santander.buscarClientesPorDni(dni);
 		}catch(IOException e){
 			System.out.println("Error de Ingreso de datos");
@@ -303,6 +337,113 @@ public class Main {
 			System.out.println("No se ha Ingresado un nombre");
 		}
 	}
+	//******************************************************* CUENTAS *******************************************************
+	static private int menuGestionCuentas(){
+		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
+		int select = -1;
+		do{
+			try{
+				System.out.println("------------GESTION DE CUENTAS--------------\n\n"+
+						"1. Alta de Caja de Ahorro.\n"+
+						"0. Volver al Menu Anterior.");
+				System.out.print("Ingrese una Opcion Valida: ");
+				//Espera que ingresemos una opcion
+				select = Integer.parseInt(io.readLine());
+				//Dependiendo de la opcion ingresada ejecuta un metodo
+				switch (select){
+					case 1:
+						altaCajaDeAhorro();
+						System.out.println("Presione cualquier tecla ENTER para contiuaar...");
+						io.readLine();
+						break;
+					case 10:
+						break;
+					case 0:
+						break;
+					default:
+						System.out.println("Opcion Desconocida");
+						break;
+				}
+				System.out.println("");
+			}catch(NumberFormatException e){
+				System.out.println("La Letras no son una opcion");
+			}
+			catch(Exception e){
+				System.out.println("Error desconocido");
+			}
+		}while(select !=0);
+		select = 100;
+		return select;
+	}
+	static private <thrown> void altaCajaDeAhorro() throws IOException{
+		
+		String cuit;
+		double montoInicial,tasaDeInteres;
+		Moneda nominacion = Moneda.pesos;
+		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
+		try{
+			System.out.println("Ingrese cuit");
+			System.out.println("Cuit: (ej: '336673519'):");
+			cuit = io.readLine().toUpperCase();
+			System.out.println("Monto: (ej: 10000)");
+			montoInicial = Double.parseDouble(io.readLine());
+			System.out.println("Tasa: ");
+			tasaDeInteres = Double.parseDouble(io.readLine());
+			System.out.println("Codigo Postal: (ej: 1650):");
+			
+			santander.aperturaDeCuentaAhorro(cuit, montoInicial, nominacion, tasaDeInteres);
+			
+			System.out.println("Se dio de alta al Cliente con el CUIT: "+cuit);
+		}catch(NumberFormatException e){
+			System.out.println("Los datos Ingresados del cliente son Incorrectos");
+		}
+	}	
+	//************************************************************** BATCH **************************************************************
+	static private int menuProcesoBatch(){
+		BufferedReader io = new BufferedReader (new InputStreamReader(System.in));
+		int select = -1;
+		do{
+			try{
+				System.out.println("------------PROCESO BATCH--------------\n\n"+
+						"1. Ejecutar Mantenimiento.\n"+
+						"0. Volver al Menu Anterior.");
+				System.out.print("Ingrese una Opcion Valida: ");
+				//Espera que ingresemos una opcion
+				select = Integer.parseInt(io.readLine());
+				//Dependiendo de la opcion ingresada ejecuta un metodo
+				switch (select){
+					case 1:
+						ejecutarMantenimiento();
+						System.out.println("Presione cualquier tecla ENTER para contiuaar...");
+						io.readLine();
+						break;
+					case 10:
+						break;
+					case 0:
+						break;
+					default:
+						System.out.println("Opcion Desconocida");
+						break;
+				}
+				System.out.println("");
+			}catch(NumberFormatException e){
+				System.out.println("La Letras no son una opcion");
+			}
+			catch(Exception e){
+				System.out.println("Error desconocido");
+			}
+		}while(select !=0);
+		select = 100;
+		return select;
+	}
+	static private void ejecutarMantenimiento(){
+			try {
+				santander.correrBatch();
+			} catch (ExcepcionIOBatch | ExcepcionBatch e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
 	static private boolean esNumero(String cbu){
 		boolean esNumero = false;
 		int m = 1;
@@ -313,10 +454,9 @@ public class Main {
 				m++;
 			} 
 		}catch (NumberFormatException nfe){	
-			esNumero = false;
-		}finally{
-			return esNumero;
+			return esNumero = false;
 		}
+			return esNumero;
 	}
 	static private boolean validarFecha(String fecha){
 		try {

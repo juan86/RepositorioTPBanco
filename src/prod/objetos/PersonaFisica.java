@@ -1,6 +1,11 @@
 package prod.objetos;
 
-class PersonaFisica extends Cliente{
+import java.util.IllegalFormatException;
+import prod.excepciones.ExcepcionAltaCliente;
+import prod.excepciones.ExcepcionCliente;
+import prod.excepciones.ExcepcionDniCliente;
+
+public class PersonaFisica extends Cliente{
 	private TipDocumento tipDNI;
 	private int numeroDocumento;
 	private EnumCivil estadoCivil;
@@ -19,22 +24,27 @@ class PersonaFisica extends Cliente{
 	 * @param estadoCivil
 	 * @param profesion
 	 * @param nombreConyuge
+	 * @throws ExcepcionCliente 
 	 */
-	public PersonaFisica(String nombre,String cuit,String direccion,int cp,String localidad,String provincia,String telefono,
-			TipDocumento tipDNI,int numeroDocumento, EnumCivil estadoCivil,String profesion,String nombreConyuge){
+	public PersonaFisica(String nombre,String cuit,String direccion,String cp,String localidad,String provincia,String telefono,
+		TipDocumento tipDNI,String numeroDocumento, EnumCivil estadoCivil,String profesion,String nombreConyuge) throws ExcepcionCliente{
 		super(nombre,cuit,direccion,cp,localidad,provincia,telefono);
-		this.tipDNI = tipDNI;
-		this.numeroDocumento = numeroDocumento;
-		this.estadoCivil = estadoCivil;
-		this.profesion = profesion;
-		this.nombreConyuge = nombreConyuge;
+		try{	
+			this.tipDNI = tipDNI;
+			validarNumeroDocumento(numeroDocumento);
+			this.estadoCivil = estadoCivil;
+			this.profesion = profesion;
+			this.nombreConyuge = nombreConyuge;
+		}catch(IllegalFormatException e){
+			
+		}
 	}
 	//GET---------------------------------
 	public TipDocumento getTipDNI(){
 		return this.tipDNI;
 	}
-	public int getNumeroDocumento(){
-		return this.numeroDocumento;
+	public String getNumeroDocumento(){
+		return Integer.toString(this.numeroDocumento);
 	}
 	public EnumCivil getEstadoCivil(){
 		return this.estadoCivil;
@@ -78,5 +88,21 @@ class PersonaFisica extends Cliente{
 	 */
 	public void setNombreConyuge(String nombreConyuge){
 		this.nombreConyuge = nombreConyuge;
+	}
+	//---------------METODOS-------------------------
+	private void validarNumeroDocumento(String documento) throws ExcepcionAltaCliente{
+		int numero;
+		try{
+			numero = Integer.parseInt(documento);
+			if(documento.length()== 8){
+				this.numeroDocumento = numero;
+			}else{
+				throw new ExcepcionDniCliente(documento);
+			}
+		}catch(IllegalFormatException e){
+			throw new ExcepcionDniCliente(documento);
+		}catch(NumberFormatException e){
+			throw new ExcepcionDniCliente(documento);
+		}
 	}
 }

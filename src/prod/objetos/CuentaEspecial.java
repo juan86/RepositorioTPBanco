@@ -14,8 +14,7 @@ public class CuentaEspecial extends Cuenta {
 	public CuentaEspecial(String cbuIngresado, Moneda nominacionIngresada){
 		super(cbuIngresado, nominacionIngresada);
 		super.setSaldo(0.0);
-		TipoMovimiento movimiento = TipoMovimiento.credito;
-		Transaccion primerTransaccion = new Transaccion(movimiento, 0.0, "Creacion", "Movimiento Inicial En la Creacion");
+		Transaccion primerTransaccion = new Transaccion(TipoMovimiento.credito, 0.0, "Creacion");
 		this.agregarTransaccion(primerTransaccion);
 	}
 

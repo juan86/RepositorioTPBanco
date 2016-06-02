@@ -1,6 +1,5 @@
 package prod.objetos;
 import java.util.ArrayList;
-
 import prod.excepciones.ExcepcionCuenta;
 
 public abstract class Cuenta {
@@ -9,8 +8,8 @@ public abstract class Cuenta {
 	private boolean activo;
 	private final Moneda nominacion;
 	private double saldo;
-	protected ArrayList<Transaccion> historicoMov;
-	
+	protected ArrayList<Transaccion> historicoMov = new ArrayList<Transaccion>();
+	 
 	
 	//Constructor para las cuentas de ahorro y especiales con la nominacion indicada
 	

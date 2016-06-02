@@ -61,5 +61,13 @@ public class CuentaCorriente extends CuentaCliente {
 		}
 		this.setSaldo(this.getSaldo() - montoADebitar);
 	}
+	
+	public double getSobreGiro(){
+		return this.sobregiro;
+	}
+	
+	public static double getComision(){
+		return comision;
+	}
 
 }

@@ -14,7 +14,7 @@ public class GestionDeCuentas {
 	 */
 	//Post-Condicion: Devuelve un objeto cuenta ahorro inicializado con un CBU correspondiente al CUIT + numero aleatorio entre 0 y 9999
 	
-	public CuentaAhorro aperturaDeCuenta(ArrayList<Cliente> titulares, double montoInicial, Moneda nominacionDeCuenta, double tasaDeInteres) {
+	public CuentaAhorro aperturaDeCuentaAhorro(ArrayList<Cliente> titulares, double montoInicial, Moneda nominacionDeCuenta, double tasaDeInteres) {
 		Random rndm = new Random();
 		Cliente primerCliente = titulares.get(1);
 		String cbuGenerado = primerCliente.getCuit() + (int)(rndm.nextDouble()*10000);
@@ -35,7 +35,7 @@ public class GestionDeCuentas {
 	//Post-Condicion: Devuelve un objeto cuenta corriente inicializado con un CBU correspondiente al CUIT + numero aleatorio entre 0 y 9999
 	
 	
-	public CuentaCorriente aperturaDeCuenta(ArrayList<Cliente> titulares, double montoInicial, double sobregiro){
+	public CuentaCorriente aperturaDeCuentaCorriente(ArrayList<Cliente> titulares, double montoInicial, double sobregiro){
 		Random rndm = new Random();
 		Cliente primerCliente = titulares.get(1);
 		String cbuGenerado = primerCliente.getCuit() + (int)(rndm.nextDouble()*10000);

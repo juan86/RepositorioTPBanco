@@ -93,5 +93,4 @@ public class CuentaAhorro extends CuentaCliente {
 	public static double getCostoMantenimientoDolares(){
 		return costoMantenimientoDolares;
 	}
-	
 }

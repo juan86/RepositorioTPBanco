@@ -3,20 +3,33 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import prod.excepciones.ExcepcionClienteInexistente;
+import prod.excepciones.ExcepcionClienteYaRegistrado;
+
 public class ListadoClientes {
 	private HashMap<String,Cliente> lista = new HashMap<String,Cliente>();
 	//HASHMAP AUXILIARES----------------------------------------
 	//HashMap<NOMBRE,CUIT>
 	private HashMap<String,LinkedList<String>> listaAuxiliar = new HashMap<String,LinkedList<String>>();
 	//HashMap<DNI,CUIT>
-	private HashMap<Integer,String> listaAuxiliar2 = new HashMap<Integer,String>();
+	private HashMap<String,String> listaAuxiliar2 = new HashMap<String,String>();
 	
 	public ListadoClientes(){
 		
 	}
-	public void addCliente(Cliente newCliente){
+	public void addCliente(Cliente newCliente) throws ExcepcionClienteInexistente, ExcepcionClienteYaRegistrado{
+		//SI ES UNA PERSONA FISICA COPIA EL DNI A LA LISTA AUXILIAR CON SU CUIT HASHMAP<DNI,CUIT>
+		if(newCliente instanceof PersonaFisica ){
+			PersonaFisica cliente = (PersonaFisica) newCliente;
+			if(!listaAuxiliar2.containsKey(cliente.getNumeroDocumento())){
+				listaAuxiliar2.put(cliente.getNumeroDocumento(),cliente.getCuit());
+			}else{
+				throw new ExcepcionClienteYaRegistrado(cliente.getNumeroDocumento());
+			}
+		}
+		
 		if(lista.containsKey(newCliente.getCuit())){
-			System.out.println("La persona ya esta Regristrada");
+			throw new ExcepcionClienteYaRegistrado(newCliente.getCuit());
 		}else{
 			lista.put(newCliente.getCuit(),newCliente);
 			//SI EL NOMBRE EXISTE DEL NUEVO CLIENTE SOLAMENTE AGREGA SU CUIT AL HASHMAP<NOMBRE,CUIT>
@@ -28,24 +41,16 @@ public class ListadoClientes {
 				listaTemporal.add(newCliente.getCuit());
 				listaAuxiliar.put(newCliente.getNombre(), listaTemporal);
 			}
-			//SI ES UNA PERSONA FISICA COPIA EL DNI A LA LISTA AUXILIAR CON SU CUIT HASHMAP<DNI,CUIT>
-			if(newCliente instanceof PersonaFisica ){
-				PersonaFisica cliente = (PersonaFisica) newCliente;
-				listaAuxiliar2.put(cliente.getNumeroDocumento(),cliente.getCuit());
-			}
 		}
 	}
 	//BUSCAR CLIENTE POR CUIT--------------------------------------------------
-	public Cliente buscarClientePorCuit(String cuit){
+	public Cliente buscarClientePorCuit(String cuit) throws ExcepcionClienteInexistente{
 		Cliente cliente = obtenerCliente(cuit);
-		if(cliente == null){
-			return cliente = null;
-		}else{
-			return cliente;
-		  	}
+		return cliente;
 	}
+	
 	//BUSCAR CLIENTE POR NOMBRE--------------------------------------------------
-	public LinkedList<Cliente> buscarClientePorNombre(String nombre){
+	public LinkedList<Cliente> buscarClientePorNombre(String nombre) throws ExcepcionClienteInexistente{
 		LinkedList<Cliente> lista= new LinkedList<Cliente>();
 		if(listaAuxiliar.containsKey(nombre)){
 			Iterator<String> it = listaAuxiliar.get(nombre).iterator();
@@ -57,13 +62,13 @@ public class ListadoClientes {
 			return lista = null;
 		}
 	}
-	public Cliente busquedaDeClientePorDni(int numeroDni){
+	public Cliente busquedaDeClientePorDni(String numeroDni) throws ExcepcionClienteInexistente{
 		return buscarClientePorCuit(listaAuxiliar2.get(numeroDni));
 	}
 	//OBTENER CLIENTE---------------------------------------------------------------
-	public Cliente obtenerCliente(String cuit){
+	public Cliente obtenerCliente(String cuit) throws ExcepcionClienteInexistente{
 		if(!lista.containsKey(cuit)){
-			return null;
+			throw new ExcepcionClienteInexistente(cuit);
 		}else{
 			return lista.get(cuit);
 			}
