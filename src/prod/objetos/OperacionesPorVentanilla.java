@@ -5,9 +5,20 @@ import prod.excepciones.ExcepcionCuentaSinMovimientos;
 import prod.excepciones.ExcepcionExtraccionCCorriente;
 
 public class OperacionesPorVentanilla {
-	public OperacionesPorVentanilla(){
-		
+	
+	private static OperacionesPorVentanilla instanciaOperacionesVentanilla;
+	
+	private OperacionesPorVentanilla(){
 	}
+	
+	public static OperacionesPorVentanilla getInstance(){
+		OperacionesPorVentanilla instanciaCreada = null;
+		if(instanciaOperacionesVentanilla == null){
+			instanciaCreada = new OperacionesPorVentanilla();
+		}
+		return instanciaCreada;
+	}
+	
 	public void depositoEfectivo(double monto, Moneda tipoMoneda,Cuenta cuenta) throws ExcepcionCuenta{
 		cuenta.acreditar(monto, tipoMoneda);
 		Transaccion newTransaccion = new Transaccion(TipoMovimiento.credito,monto,"Deposito en Efectivo");

@@ -1,6 +1,7 @@
 package prod.objetos;
 
 import java.io.*;
+import java.rmi.NoSuchObjectException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,12 +13,28 @@ class Batch {
 
 	private double cotizacionDolar;
 	private CuentaEspecial mantenimientos;
+	private static Batch instanciaBatch;
 	
-	public Batch(CuentaEspecial mantenimiento, double cotizacionDolar) {
+	private Batch(CuentaEspecial mantenimiento, double cotizacionDolar) {
 		
 		this.cotizacionDolar = cotizacionDolar;
 		this.mantenimientos = mantenimiento;
 	}
+	
+	public static Batch getInstance(CuentaEspecial mantenimiento, double cotizacionDolar){
+		if(instanciaBatch == null){
+			instanciaBatch = new Batch(mantenimiento, cotizacionDolar);
+		}
+		return instanciaBatch;
+	}
+	
+	public static Batch getInstance() throws NoSuchObjectException{
+		if(instanciaBatch == null){
+			throw new NoSuchObjectException("El objeto Batch no fue inicializado, por favor crearlo con sus parametros primero");
+		}
+		return instanciaBatch;
+	}
+	
 	public void cobroDeMantenimientos(ArrayList<CuentaCliente> cuentasCliente) throws ExcepcionIOBatch, ExcepcionBatch{
 		
 		ArrayList<CuentaCliente> listaDeCuentas = cuentasCliente;

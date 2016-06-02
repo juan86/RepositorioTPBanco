@@ -17,7 +17,7 @@ import prod.excepciones.ExcepcionTipDNICliente;
 
 
 public class Main {
-	static private Banco santander = new Banco();
+	static private Banco santander = Banco.getInstance();
 	//BigInteger hola = new BigInteger("1");
 	
 	public static void main(String[] agr) throws IOException{

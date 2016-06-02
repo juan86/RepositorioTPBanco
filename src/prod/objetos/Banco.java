@@ -19,22 +19,35 @@ public class Banco {
 	//SE CREA EL NUEVO ARRAYLIST DE CUENTAS
 	private ArrayList<CuentaCliente> cuentasCliente = new ArrayList<CuentaCliente>();
 	//
-	private GestionClientes gestionClientes = new GestionClientes();
-	private GestionDeCuentas gestionCuentas = new GestionDeCuentas();
-	private OperacionesPorVentanilla operaciones = new OperacionesPorVentanilla();
+	private GestionClientes gestionClientes;
+	private GestionDeCuentas gestionCuentas;
+	private OperacionesPorVentanilla operaciones;
 	private CuentaEspecial mantenimientos;
 	private CuentaEspecial retenciones;
 	private Batch adminMantenimientos;
 	private double cotizacionDolar;
+	private static Banco instanciaDeBanco = null;
 	
-	public Banco(){
+	private Banco(){
 		
 		//postCondicion: Las cuentas del Banco son PESOS. 
 		this.mantenimientos = new CuentaEspecial("Especial1", Moneda.pesos);
 		this.retenciones = new CuentaEspecial("Especial2",Moneda.pesos);
 		this.cotizacionDolar = 14.5;
-		this.adminMantenimientos = new Batch(mantenimientos, cotizacionDolar);
+		this.adminMantenimientos = Batch.getInstance(mantenimientos, cotizacionDolar);
+		this.gestionClientes = GestionClientes.getInstance();
+		this.gestionCuentas = GestionDeCuentas.getInstance();
+		this.operaciones = OperacionesPorVentanilla.getInstance();
+		
 		System.out.println("");
+	}
+	
+	public static Banco getInstance(){
+		Banco instanciaCreada = null;
+		if(instanciaDeBanco == null){
+			instanciaCreada = new Banco();
+		}
+		return instanciaCreada;
 	}
 	
 	//******************************************** BANCO *********************************************************
@@ -194,30 +207,13 @@ public class Banco {
 	//PRECONDICION: INGRESAR UN LISTADO DE CUITS CON LOS CLIENTES A TITULARIZAR, SEPARADO POR COMAS.
 	
 	public void aperturaDeCuentaAhorro(String titulares, double montoInicial, Moneda nominacion, double tasaDeInteres){
-		ArrayList<Cliente> titularesIngresados = new ArrayList<Cliente>();
-		StringTokenizer st = new StringTokenizer(titulares, ",");
-		while(st.hasMoreTokens()){
-			try {
-				titularesIngresados.add(gestionClientes.getCliente(st.nextToken()));
-			} catch (ExcepcionClienteInexistente e) {
-				e.printStackTrace();
-			}
-		}
-		cuentasCliente.add(gestionCuentas.aperturaDeCuentaAhorro(titularesIngresados, montoInicial, nominacion, tasaDeInteres));
+		
+		gestionCuentas.aperturaDeCuentaAhorro(titulares, montoInicial, nominacion, tasaDeInteres);
 	}
 	
 	public void aperturaDeCuentaCorriente(String titulares, double montoInicial, double sobregiro){
-		ArrayList<Cliente> titularesIngresados = new ArrayList<Cliente>();
-		StringTokenizer st = new StringTokenizer(titulares, ",");
-		while(st.hasMoreTokens()){
-			try {
-				titularesIngresados.add(gestionClientes.getCliente(st.nextToken()));
-			} catch (ExcepcionClienteInexistente e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		cuentasCliente.add(gestionCuentas.aperturaDeCuentaCorriente(titularesIngresados, montoInicial, sobregiro));
+		
+		gestionCuentas.aperturaDeCuentaCorriente(titulares, montoInicial, sobregiro);
 	}
 	
 	public void habilitarCuenta(String cbu){
@@ -247,11 +243,10 @@ public class Banco {
 
 	//*********************************************** OPERACIONES VENTANILLA ***************************************************
 	public void depositoEnEfectivo(double monto, Moneda tipoMoneda,String cbu){
-		OperacionesPorVentanilla operacionesVentanilla = new OperacionesPorVentanilla();
 		
 		try {
 			Cuenta cuenta = obtenerCuenta(cbu);
-			operacionesVentanilla.depositoEfectivo(monto, tipoMoneda, cuenta);
+			operaciones.depositoEfectivo(monto, tipoMoneda, cuenta);
 		} catch (ExcepcionCuenta e) {
 			System.out.println(e);
 		}catch(ExcepcionNoExisteCuenta e){
@@ -260,7 +255,6 @@ public class Banco {
 	}
 	
 	public void extraccionEfectivo(String cuit,String cbu,double monto,Moneda tipoMoneda){
-		OperacionesPorVentanilla operacionesVentanilla = new OperacionesPorVentanilla();
 		
 		try {
 			Cliente newCliente = this.gestionClientes.getCliente(cuit);
@@ -268,7 +262,7 @@ public class Banco {
 			if(!newCliente.contieneCBU(cbu)){
 				throw new ExcepcionNoEsTitular(cuit,cbu);
 			}
-			operacionesVentanilla.extraccionEfectivo(monto, tipoMoneda, newCuenta);
+			operaciones.extraccionEfectivo(monto, tipoMoneda, newCuenta);
 		}catch(ExcepcionClienteInexistente e){
 			System.out.println(e);
 		}catch (ExcepcionExtraccionCCorriente e) {

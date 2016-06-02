@@ -9,8 +9,17 @@ import prod.excepciones.ExcepcionClienteInexistente;
 
 public class GestionClientes {
 	private ListadoClientes listaClientes = new ListadoClientes();
-	public GestionClientes(){
-		
+	private static GestionClientes instanciaGestionClientes;
+	
+	private GestionClientes(){
+	}
+	
+	public static GestionClientes getInstance(){
+		GestionClientes instanciaCreada = null;
+		if(instanciaGestionClientes == null){
+			instanciaCreada = new GestionClientes();
+		}
+		return instanciaCreada;
 	}
 	//ALTA DE CLIENTES--------------------------------------------------------------------------
 
